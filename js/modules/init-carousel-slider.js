@@ -23,33 +23,6 @@ const initCarouselSlider = () => {
     const shownSlides = sliderControls && sliderControls.querySelector('.carousel-slider__number-shown');
     let timeoutId = null;
 
-    const autoPlay = () => {
-      // timeoutId = setTimeout(() => {
-      //   sliderList.scrollLeft += firstCardWidth : null;
-
-      //   if (shownSlides && ((Number(shownSlides.textContent) + 1) > sliderListChildrens.length)) {
-      //     shownSlides.textContent = 1;
-      //   } else {
-      //     shownSlides.textContent = Number(shownSlides.textContent) + 1;
-      //   }
-      // }, 4000);
-    };
-
-    const infiniteScroll = () => {
-      if (sliderList.scrollLeft === 0) {
-        sliderList.classList.add('carousel-slider__list--no-transition');
-        sliderList.scrollLeft = sliderList.scrollWidth - (2 * sliderList.offsetWidth);
-        sliderList.classList.remove('carousel-slider__list--no-transition');
-      } else if (Math.ceil(sliderList.scrollLeft) === sliderList.scrollWidth - sliderList.offsetWidth) {
-        sliderList.classList.add('carousel-slider__list--no-transition');
-        sliderList.scrollLeft = sliderList.offsetWidth;
-        sliderList.classList.remove('carousel-slider__list--no-transition');
-      }
-
-      clearTimeout(timeoutId);
-      autoPlay();
-    };
-
     totalSlides ? totalSlides.textContent = sliderListChildrens.length : null;
 
     sliderListChildrens.forEach((slide) => {
@@ -85,7 +58,61 @@ const initCarouselSlider = () => {
           }
         });
 
-        autoPlay();
+        const autoPlay = () => {
+          timeoutId = setTimeout(() => {
+            window.addEventListener('keydown', clickTabHandler);
+            sliderList.scrollLeft += firstCardWidth;
+    
+            if (shownSlides && ((Number(shownSlides.textContent) + 1) > sliderListChildrens.length)) {
+              shownSlides.textContent = 1;
+            } else {
+              shownSlides.textContent = Number(shownSlides.textContent) + 1;
+            }
+
+            setTimeout(() => {
+              sliderListItems.forEach((slide, i) => {
+                if (i === Math.round(sliderList.scrollLeft / (firstCardWidth + 20)) || i > Math.round(sliderList.scrollLeft / (firstCardWidth + 20)) && i < (Math.round(sliderList.scrollLeft / (firstCardWidth + 20)) + 3)) {
+                  slide.querySelector('button').setAttribute('tabindex', '0');
+                } else {
+                  slide.querySelector('button').setAttribute('tabindex', '-1');
+                }
+              });
+  
+              if (Math.round(sliderList.scrollLeft / (firstCardWidth + 20)) === sliderListOriginalItems.length + 3) {
+                sliderListItems.forEach((slide) => {
+                  slide.querySelector('button').setAttribute('tabindex', '-1');
+                });
+  
+                sliderListOriginalItems.forEach((slide, i) => {
+                  if (i < 3) {
+                    slide.querySelector('button').setAttribute('tabindex', '0');
+                  } else {
+                    slide.querySelector('button').setAttribute('tabindex', '-1');
+                  }
+                });
+              }
+
+              window.removeEventListener('keydown', clickTabHandler);
+            }, 400);
+          }, 4000);
+        };
+    
+        const infiniteScroll = () => {
+          if (sliderList.scrollLeft === 0) {
+            sliderList.classList.add('carousel-slider__list--no-transition');
+            sliderList.scrollLeft = sliderList.scrollWidth - (2 * sliderList.offsetWidth);
+            sliderList.classList.remove('carousel-slider__list--no-transition');
+          } else if (Math.ceil(sliderList.scrollLeft) === sliderList.scrollWidth - sliderList.offsetWidth) {
+            sliderList.classList.add('carousel-slider__list--no-transition');
+            sliderList.scrollLeft = sliderList.offsetWidth;
+            sliderList.classList.remove('carousel-slider__list--no-transition');
+          }
+    
+          clearTimeout(timeoutId);
+          autoPlay();
+        };
+
+        autoPlay();  
 
         sliderList.addEventListener('scroll', infiniteScroll);
 
@@ -106,10 +133,9 @@ const initCarouselSlider = () => {
         });
 
         sliderButtonRight ? sliderButtonRight.addEventListener('click', () => {
+          window.addEventListener('keydown', clickTabHandler);
           sliderButtonRight.disabled = true;
           sliderList.scrollLeft += firstCardWidth + 20;
-
-          window.addEventListener('keydown', clickTabHandler);
 
           if (shownSlides && ((Number(shownSlides.textContent) + 1) > sliderListChildrens.length)) {
             shownSlides.textContent = 1;
