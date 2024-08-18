@@ -61,6 +61,8 @@ const initCarouselSlider = () => {
         const autoPlay = () => {
           timeoutId = setTimeout(() => {
             window.addEventListener('keydown', clickTabHandler);
+            sliderButtonLeft.classList.add('btn-arrow--not-active');
+            sliderButtonLeft.disabled = true;
             sliderList.scrollLeft += firstCardWidth;
     
             if (shownSlides && ((Number(shownSlides.textContent) + 1) > sliderListChildrens.length)) {
@@ -93,6 +95,8 @@ const initCarouselSlider = () => {
               }
 
               window.removeEventListener('keydown', clickTabHandler);
+              sliderButtonLeft.disabled = false;
+              sliderButtonLeft.classList.remove('btn-arrow--not-active');
             }, 400);
           }, 4000);
         };
@@ -109,10 +113,21 @@ const initCarouselSlider = () => {
           }
     
           clearTimeout(timeoutId);
-          autoPlay();
+
+          if (!document.hidden) {
+            autoPlay();
+          }
         };
 
-        autoPlay();  
+        document.addEventListener('visibilitychange', () => {
+          if (document.hidden) {
+            clearTimeout(timeoutId);
+          } else {
+            autoPlay();
+          }
+        });
+
+        // autoPlay();  
 
         sliderList.addEventListener('scroll', infiniteScroll);
 

@@ -810,7 +810,7 @@ footer {
   opacity: 0.6;
 }
 
-.btn-arrow:disabled {
+.btn-arrow:not(.btn-arrow--not-active):disabled {
   background-color: #D6D6D6;
   cursor: default;
 }
