@@ -23,13 +23,13 @@ const initCarouselSlider = () => {
     const shownSlides = sliderControls && sliderControls.querySelector('.carousel-slider__number-shown');
     let timeoutId = null;
 
-    totalSlides ? totalSlides.textContent = sliderListChildrens.length : null;
-
-    sliderListChildrens.forEach((slide) => {
-      slide.querySelector('button').setAttribute('tabindex', '-1');
-    });
-
     if (sliderListChildrens && sliderListChildrens.length > 0) {
+      totalSlides ? totalSlides.textContent = sliderListChildrens.length : null;
+
+      sliderListChildrens.forEach((slide) => {
+        slide.querySelector('button').setAttribute('tabindex', '-1');
+      });
+
       if (sliderListChildrens.length < 3) {
         shownSlides ? shownSlides.textContent = sliderListChildrens.length : null;
 
@@ -47,8 +47,6 @@ const initCarouselSlider = () => {
         });
 
         const sliderListItems = sliderList && sliderList.querySelectorAll('.carousel-slider__item');
-        const sliderListOriginalItems = sliderList && sliderList.querySelectorAll('.carousel-slider__item--original');
-        console.log(sliderListOriginalItems);
         
         sliderListChildrens.forEach((slide, i) => {
           if (i < Math.round(sliderList.scrollLeft / (firstCardWidth + 20))) {
@@ -58,11 +56,19 @@ const initCarouselSlider = () => {
           }
         });
 
+        const clickTabHandler = (evt) => {
+          if (evt.key == 'Tab') {
+            evt.preventDefault();
+          }
+        };
+
         const autoPlay = () => {
           timeoutId = setTimeout(() => {
-            window.addEventListener('keydown', clickTabHandler);
+            slider.addEventListener('keydown', clickTabHandler);
             sliderButtonLeft.classList.add('btn-arrow--not-active');
             sliderButtonLeft.disabled = true;
+            const sliderFirstCard = slider.querySelector('.carousel-slider__item');
+            const firstCardWidth = sliderFirstCard && sliderFirstCard.offsetWidth;
             sliderList.scrollLeft += firstCardWidth;
     
             if (shownSlides && ((Number(shownSlides.textContent) + 1) > sliderListChildrens.length)) {
@@ -80,12 +86,12 @@ const initCarouselSlider = () => {
                 }
               });
   
-              if (Math.round(sliderList.scrollLeft / (firstCardWidth + 20)) === sliderListOriginalItems.length + 3) {
+              if (Math.round(sliderList.scrollLeft / (firstCardWidth + 20)) === sliderListChildrens.length + 3) {
                 sliderListItems.forEach((slide) => {
                   slide.querySelector('button').setAttribute('tabindex', '-1');
                 });
   
-                sliderListOriginalItems.forEach((slide, i) => {
+                sliderListChildrens.forEach((slide, i) => {
                   if (i < 3) {
                     slide.querySelector('button').setAttribute('tabindex', '0');
                   } else {
@@ -94,7 +100,7 @@ const initCarouselSlider = () => {
                 });
               }
 
-              window.removeEventListener('keydown', clickTabHandler);
+              slider.removeEventListener('keydown', clickTabHandler);
               sliderButtonLeft.disabled = false;
               sliderButtonLeft.classList.remove('btn-arrow--not-active');
             }, 400);
@@ -111,10 +117,10 @@ const initCarouselSlider = () => {
             sliderList.scrollLeft = sliderList.offsetWidth;
             sliderList.classList.remove('carousel-slider__list--no-transition');
           }
-    
-          clearTimeout(timeoutId);
 
-          if (!document.hidden) {
+          clearTimeout(timeoutId);
+          
+          if (slider.parentElement.getBoundingClientRect().top < 250) {
             autoPlay();
           }
         };
@@ -122,12 +128,23 @@ const initCarouselSlider = () => {
         document.addEventListener('visibilitychange', () => {
           if (document.hidden) {
             clearTimeout(timeoutId);
-          } else {
+          } else if (slider.parentElement.getBoundingClientRect().top < 250) {
             autoPlay();
           }
         });
 
-        // autoPlay();  
+        let byScrollAutoPlayInit = null;
+
+        document.addEventListener('scroll', () => {
+          if (slider.parentElement.getBoundingClientRect().top < 250 && byScrollAutoPlayInit !== true) {
+            clearTimeout(timeoutId);
+            autoPlay();
+            byScrollAutoPlayInit = true;
+          } else if (byScrollAutoPlayInit === true && slider.parentElement.getBoundingClientRect().top > 250) {
+            clearTimeout(timeoutId);
+            byScrollAutoPlayInit = false;
+          }
+        });
 
         sliderList.addEventListener('scroll', infiniteScroll);
 
@@ -137,12 +154,6 @@ const initCarouselSlider = () => {
           }
         });
 
-        const clickTabHandler = (evt) => {
-          if (evt.key == 'Tab') {
-            evt.preventDefault();
-          }
-        };
-
         sliderList.addEventListener('touchmove', (evt) => {
           evt.preventDefault();
         });
@@ -150,6 +161,8 @@ const initCarouselSlider = () => {
         sliderButtonRight ? sliderButtonRight.addEventListener('click', () => {
           window.addEventListener('keydown', clickTabHandler);
           sliderButtonRight.disabled = true;
+          const sliderFirstCard = slider.querySelector('.carousel-slider__item');
+          const firstCardWidth = sliderFirstCard && sliderFirstCard.offsetWidth;
           sliderList.scrollLeft += firstCardWidth + 20;
 
           if (shownSlides && ((Number(shownSlides.textContent) + 1) > sliderListChildrens.length)) {
@@ -167,12 +180,12 @@ const initCarouselSlider = () => {
               }
             });
 
-            if (Math.round(sliderList.scrollLeft / (firstCardWidth + 20)) === sliderListOriginalItems.length + 3) {
+            if (Math.round(sliderList.scrollLeft / (firstCardWidth + 20)) === sliderListChildrens.length + 3) {
               sliderListItems.forEach((slide) => {
                 slide.querySelector('button').setAttribute('tabindex', '-1');
               });
 
-              sliderListOriginalItems.forEach((slide, i) => {
+              sliderListChildrens.forEach((slide, i) => {
                 if (i < 3) {
                   slide.querySelector('button').setAttribute('tabindex', '0');
                 } else {
@@ -189,6 +202,8 @@ const initCarouselSlider = () => {
 
         sliderButtonLeft ? sliderButtonLeft.addEventListener('click', () => {
           sliderButtonLeft.disabled = true;
+          const sliderFirstCard = slider.querySelector('.carousel-slider__item');
+          const firstCardWidth = sliderFirstCard && sliderFirstCard.offsetWidth;
           sliderList.scrollLeft -= firstCardWidth + 20;
 
           if (shownSlides && ((Number(shownSlides.textContent) - 1) < 1)) {
@@ -200,7 +215,7 @@ const initCarouselSlider = () => {
           window.addEventListener('keydown', clickTabHandler);
 
           setTimeout(() => {
-            sliderListItems.forEach((slide, i, arr) => {
+            sliderListItems.forEach((slide, i) => {
               if (i === Math.round(sliderList.scrollLeft / (firstCardWidth + 20)) || i > Math.round(sliderList.scrollLeft / (firstCardWidth + 20)) && i < (Math.round(sliderList.scrollLeft / (firstCardWidth + 20)) + 3)) {
                 slide.querySelector('button').setAttribute('tabindex', '0');
               } else {
@@ -213,7 +228,7 @@ const initCarouselSlider = () => {
                 slide.querySelector('button').setAttribute('tabindex', '-1');
               });
 
-              sliderListOriginalItems.forEach((slide, i, arr) => {
+              sliderListChildrens.forEach((slide, i, arr) => {
                 if (i < arr.length && i > arr.length - 4) {
                   slide.querySelector('button').setAttribute('tabindex', '0');
                 } else {
