@@ -35,7 +35,7 @@ const initCarouselSlider = () => {
       }
     }
 
-    if (sliderListChildrens.length < 3) {
+    if ((sliderListChildrens.length < 3 && window.innerWidth > 1023) || (sliderListChildrens.length < 2 && window.innerWidth > 767) || (sliderListChildrens.length <= 1 && window.innerWidth < 768)) {
       shownSlides ? shownSlides.textContent = sliderListChildrens.length : null;
 
       sliderButtonRight ? sliderButtonRight.disabled = true : null;
@@ -75,7 +75,7 @@ const initCarouselSlider = () => {
           sliderList.classList.add('carousel-slider__list--no-transition');
           sliderList.scrollLeft = sliderList.scrollWidth - (2 * sliderList.offsetWidth);
           sliderList.classList.remove('carousel-slider__list--no-transition');
-        } else if (Math.ceil(sliderList.scrollLeft) === sliderList.scrollWidth - sliderList.offsetWidth || Math.ceil(sliderList.scrollLeft) - 1 === sliderList.scrollWidth - sliderList.offsetWidth) {
+        } else if (Math.ceil(sliderList.scrollLeft) === sliderList.scrollWidth - sliderList.offsetWidth || Math.ceil(sliderList.scrollLeft) - 1 === sliderList.scrollWidth - sliderList.offsetWidth || Math.ceil(sliderList.scrollLeft) === sliderList.scrollWidth - sliderList.offsetWidth - 1) {
           sliderList.classList.add('carousel-slider__list--no-transition');
           sliderList.scrollLeft = sliderList.offsetWidth;
           sliderList.classList.remove('carousel-slider__list--no-transition');
