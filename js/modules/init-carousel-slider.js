@@ -35,7 +35,7 @@ const initCarouselSlider = () => {
       }
     }
 
-    if ((sliderListChildrens.length < 3 && window.innerWidth > 1023) || (sliderListChildrens.length < 2 && window.innerWidth > 767) || (sliderListChildrens.length <= 1 && window.innerWidth < 768)) {
+    if ((sliderListChildrens.length < 4 && window.innerWidth >= 1023) || (sliderListChildrens.length < 3 && window.innerWidth >= 767) || (sliderListChildrens.length < 2 && window.innerWidth < 767)) {
       shownSlides ? shownSlides.textContent = sliderListChildrens.length : null;
 
       sliderButtonRight ? sliderButtonRight.disabled = true : null;
