@@ -50,7 +50,7 @@ const initUnloopedSlider = () => {
   });
 
   sliderList.addEventListener('scroll', () => {
-    if (Math.ceil(sliderList.scrollLeft) === sliderList.scrollWidth - sliderList.offsetWidth || Math.ceil(sliderList.scrollLeft) - 1 === sliderList.scrollWidth - sliderList.offsetWidth) {
+    if ((Math.ceil(sliderList.scrollLeft) === sliderList.scrollWidth - sliderList.offsetWidth) || (Math.ceil(sliderList.scrollLeft) - 1 === sliderList.scrollWidth - sliderList.offsetWidth) || (Math.ceil(sliderList.scrollLeft) === sliderList.scrollWidth - sliderList.offsetWidth - 1)) {
       sliderButtonRight.disabled = true;
     } else {
       sliderButtonRight.disabled ? sliderButtonRight.disabled = false : null;

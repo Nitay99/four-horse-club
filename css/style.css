@@ -1000,6 +1000,7 @@ footer {
     padding-top: 62px;
     padding-bottom: 34px;
 
+    background-color: var(--color-additional-back);
     background-image: url("../img/decoration/cooper-union-stamp-paper.jpg");
     background-position: 20% 65%;
   }
@@ -1017,7 +1018,7 @@ footer {
   padding-left: 72px;
 
   font-weight: 500;
-  background-color: #D9D9D9;
+  background-color: var(--color-additional-back);
   background-image: url("../img/decoration/cooper-union-stamp-paper.jpg");
   background-position: 24% 17%;
 }
@@ -1085,6 +1086,7 @@ footer {
     padding-top: 62px;
     padding-bottom: 34px;
 
+    background-color: var(--color-additional-back);
     background-image: url("../img/decoration/cooper-union-stamp-paper.jpg");
     background-position: 20% 65%;
   }
@@ -1114,6 +1116,7 @@ footer {
     padding-right: 20px;
     padding-bottom: 34px;
 
+    background-color: var(--color-additional-back);
     background-image: url("../img/decoration/cooper-union-stamp-paper.jpg");
     background-position: 20% 65%;
   }
@@ -1166,6 +1169,7 @@ footer {
     padding-right: 20px;
     padding-bottom: 34px;
 
+    background-color: var(--color-additional-back);
     background-image: url("../img/decoration/cooper-union-stamp-paper.jpg");
     background-position: 20% 65%;
   }
